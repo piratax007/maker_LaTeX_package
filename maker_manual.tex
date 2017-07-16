@@ -1,0 +1,124 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[arduino,processing]{maker}
+\usepackage{xcolor}
+\usepackage{vmargin} 
+\setpapersize{A4}
+\setmargins{2.5cm} 
+{1.5cm} 
+{16.5cm} 
+{23.42cm} 
+{10pt} 
+{1cm} 
+{0pt} 
+{1cm} 
+\usepackage{hyperref}
+
+\input{code.tex}
+
+\definecolor{blueSpider}{rgb}{.15, .27, .43}
+\definecolor{ochre}{rgb}{.8, .47, .13}
+\definecolor{myBlue}{HTML}{027FDF}
+
+\hypersetup{
+	colorlinks = true,
+	linkcolor = blueSpider,
+	filecolor = ochre,
+	urlcolor = myBlue,
+	linktoc = page, % En la tabla de contenido, asigna los enlaces a los número de las páginas no a los títulos
+}
+
+\author{Mg. Fausto Mauricio Lagos Suárez \\ \url{piratax007@protonmail.ch}}
+\title{Maker \LaTeX{} Package \\ V 1.0}
+
+
+\begin{document}
+\maketitle
+\renewcommand{\contentsname}{Guía del usuario}
+
+\begin{abstract}
+	El paquete \cmd{maker} provee ambientes y comandos basados en el paquete \bftt{listings} que permiten incluir rápidamente código \bftt{Arduino} o \bftt{Processing} utilizando el resaltado de sintaxis de su respectivo IDE.
+\end{abstract}
+
+\tableofcontents
+
+\section{¿Qué puede hacer el paquete \cmd{maker}?}
+	El paquete \cmd{maker} tiene dos opciones, \bftt{Arduino} y \bftt{Processing} las cuales pueden utilizarse de forma independiente o conjunta en el mismo documento.
+
+	El paquete \cmd{maker} le permite incluir código de \bftt{Arduino} o \bftt{Processing} utilizando el resaltado de sintaxis propio de su respectivo IDE oficial, puede hacerlo de tres formas diferentes:
+	\begin{enumerate}
+		\item Escribiendo el código directamente en el documento \LaTeX{}.
+		\item Incluyendo comando de Arduino o Processing en línea con el texto.
+		\item Cargando el código desde un archivo \bftt{.ino} (Arduino) o \bftt{.pde} (processing).
+	\end{enumerate}
+	
+	La versión \bftt{V 1.0} del paquete \cmd{maker} esta basada en el resaltado de sintanxis de Arduino disponible en \url{https://www.arduino.cc/en/Reference/HomePage} y en la experiencia de usuario con Processing, si encuentra alguna modificación que deba hacerse a este paquete no dude en contactar con su desarrollador.
+	
+\subsection{Incluir código directamente en el documento}
+
+	Para incluir código de \bftt{Arduino} o \bftt{Processing} escribiéndolo directamente en el documento \LaTeX{} se utiliza el ambiente \cmd{ArduinoSketchBox} o \cmd{ProcessingSketchBox} respectivamente.
+	
+	Este ambiente tiene un parámetro de entrada obligatorio correspondiente al título o caption del código.
+	\\
+	
+\begin{exampletwouptinynoframe}
+\begin{ArduinoSketchBox}{Ejemplo Arduino}
+void setup(){
+  led = pinMode(INPUT);
+}
+\end{ArduinoSketchBox}
+\end{exampletwouptinynoframe}
+\\
+
+\begin{exampletwouptinynoframe}
+\begin{ProcessingSketchBox}{Ejemplo Processing}
+void draw(){
+  ellipse(50, 50, 25, 30);
+}
+\end{ProcessingSketchBox}
+\end{exampletwouptinynoframe}
+
+Los ambientes \cmd{ArduinoSketchBox} y \cmd{ProcessingSketchBox} son ideales para pequeñas piezas de código.
+
+\subsection{Incluir código en línea con el texto}
+
+Los comandos \cmdbs{ArduinoInline} y \cmdbs{ProcessingInline} permiten incluir comandos de cualquiera de estos dos lenguajes en línea con el texto, su uso es muy simple ya que tiene un único parámetro de entrada que corresponde con el código a incluir.
+
+\begin{minted}[frame=single]{latex}
+Un sketch dinámico de Arduino utiliza las funciones \ArduinoInline{void setup()} y 
+\ArduinoInLine{void loop()} mientras que su equialente en Processing utiliza las
+funciones \ProcessingInline{void setup()} y \ProcessingInline{void draw()}.
+\end{minted}
+
+Un sketch dinámico de Arduino utiliza las funciones \ArduinoInline{void setup()} y \ArduinoInline{void loop()} mientras que su equialente en Processing utiliza las funciones \ProcessingInline{void setup()} y \ProcessingInline{void draw()}.
+
+\subsection{Incluir código desde un archivo \bftt{.ino} o \bftt{.pde}}
+
+Incluir código de Arduino o Processing a partir de un archivo \bftt{.ino} o \bftt{.pde} es muy fácil utilizando el comando \cmdbs{ArduinoSketch} o \cmdbs{ProcessingSketch} que tiene dos parámetros de entrada, el nombre del archivo de código sin extensión y el texto del caption.
+
+\begin{minted}[frame=single]{latex}
+\ArduinoSketch{Blink}{Ejemplo de código Arduino a partir de un archivo .ino}
+\end{minted}
+
+\ArduinoSketch{Blink}{Ejemplo de código Arduino a partir de un archivo .ino}
+
+\begin{minted}[frame=single]{latex}
+\ProcessingSketch{Lluvia}{Ejemplo de código Processing a partir de un archivo .pde}
+\end{minted}
+
+\ProcessingSketch{Lluvia}{Ejemplo de código Processing a partir de un archivo .pde}
+
+\section{Instalación}
+
+Probablemente \cmd{maker} no este instalado por defecto en su distribución de \LaTeX{}, si este es el caso puede utilizar el administrador de paquetes de su distribución para instalar \cmd{maker} o de otra forma puede instalarlo manualmente siguiendo las instrucciones a continuación.
+
+Deberá descargar el archivo \bftt{maker.sty} desde la \href{https://github.com/piratax007/maker_LaTeX_package}{página del proyecto}, una vez disponga localmente del archivo \bftt{maker.sty} tendrá que copiarlo en el árbol de directorios de su distribución que variará de acuerdo al sistema operativo que este utilizando, puede referirse a \href{http://www.tex.ac.uk/cgi-bin/texfaq2html?label=inst-wlcf}{TEX FAQ} para encontrar instrucciones más detalladas. Si quiere trabajar con la últiva versión deberá reemplazar el archivo \bftt{maker.sty} por el más reciente descargado desde la página del proyecto.
+
+\section{Licencia}
+
+Este trabajo puede ser distribuido o modificado bajo los términos y condiciones de la LaTeX Project Public License (LPPL) v1.3C, o cualquier versión porterior. La última versión de esta licencia puede consultarse en \url{http://www.latex-project.org/lppl.txt}.
+
+Usted es libre de utilizarlo, modificarlo y compartirlo siempre que se respeten los términos y condiciones de la licencia y se reconozca al autor original.
+
+\end{document}

@@ -1,0 +1,254 @@
+%% -----------------------------------------------------------------------------
+%% 2017 por Fausto M. Lagos S. <piratax007@protonmail.ch>
+%%
+%% Este trabajo puede ser distribuido o modificado bajo los
+%% términos y condiciones de la LaTeX Project Public License (LPPL) v1.3C,
+%% o cualquier versión posterior. La última versión de esta licencia
+%% puede verse en:
+%% http://www.latex-project.org/lppl.txt
+%% -----------------------------------------------------------------------------
+%% Usted es libre de usarlo, modificarlo o distribuirlo siempre que se
+%% respeten los términos de la licencia y se reconozca al autor original
+%% -----------------------------------------------------------------------------
+%% Este paquete le permite incluir código de Arduino o Processing en sus
+%% documentos LaTeX utilizando el resaltado de sintaxis propio de los
+%% respectivo IDE.
+%% -----------------------------------------------------------------------------
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{maker}[2017/06/09 maker LaTeX package]
+
+\RequirePackage{listings}
+\RequirePackage{tcolorbox}
+\tcbuselibrary{listings, skins}
+\RequirePackage{xcolor}
+\definecolor{arduino}{HTML}{00A3A9}
+\definecolor{processing}{HTML}{283362}
+\definecolor{structure}{HTML}{818A42}
+\definecolor{variables}{HTML}{128F8F}
+\definecolor{functions}{HTML}{DB6B21}
+\definecolor{back}{HTML}{E0E0E2}
+\definecolor{myblue}{rgb}{0.01,0.61,0.98}
+\definecolor{mygray}{rgb}{0.47,0.47,0.33}
+\definecolor{blueProcessing}{rgb}{0.01,0.61,0.98}
+\definecolor{orangeProcessing}{rgb}{0.8,0.4,0}
+\definecolor{greenProcessing}{rgb}{0,0.6,0}
+\definecolor{green2Processing}{HTML}{19A476}
+\definecolor{redProcessing}{rgb}{.95, .25, .2}
+\definecolor{constantProcessing}{rgb}{.45, .67, .75}
+
+\newcommand*{\FormatDigit}[1]{\ttfamily\textcolor{black}{#1}}
+%% http://tex.stackexchange.com/questions/32174/listings-package-how-can-i-format-all-numbers
+\lstdefinestyle{FormattedNumber}{%
+    literate=*{0}{{\FormatDigit{0}}}{1}%
+             {1}{{\FormatDigit{1}}}{1}%
+             {2}{{\FormatDigit{2}}}{1}%
+             {3}{{\FormatDigit{3}}}{1}%
+             {4}{{\FormatDigit{4}}}{1}%
+             {5}{{\FormatDigit{5}}}{1}%
+             {6}{{\FormatDigit{6}}}{1}%
+             {7}{{\FormatDigit{7}}}{1}%
+             {8}{{\FormatDigit{8}}}{1}%
+             {9}{{\FormatDigit{9}}}{1}%
+             {.0}{{\FormatDigit{.0}}}{2}%
+             {.1}{{\FormatDigit{.1}}}{2}%
+             {.2}{{\FormatDigit{.2}}}{2}%
+             {.3}{{\FormatDigit{.3}}}{2}%
+             {.4}{{\FormatDigit{.4}}}{2}%
+             {.5}{{\FormatDigit{.5}}}{2}%
+             {.6}{{\FormatDigit{.6}}}{2}%
+             {.7}{{\FormatDigit{.7}}}{2}%
+             {.8}{{\FormatDigit{.8}}}{2}%
+             {.9}{{\FormatDigit{.9}}}{2}%
+             %{,}{{\FormatDigit{,}}{1}% Eliminar el comentario si quiere "," en color
+             {\ }{{ }}{1}%
+             ,%
+}
+
+%Arduino
+\DeclareOption{arduino}{%
+  \lstdefinelanguage{arduino}{
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{gray},
+    deletekeywords={...},
+    escapeinside={\%*}{*)},
+    extendedchars=true,
+    keepspaces=true,
+    keywordstyle=[1]\color{structure},
+    keywordstyle=[2]\color{variables},
+    keywordstyle=[3]\color{functions},
+    keywordstyle=[4]\bfseries\color{functions},
+    morekeywords={*,...},
+    numbers=left,
+    numbersep=5pt,
+    numberstyle=\tiny\color{mygray},
+    rulecolor=\color{black},
+    rulesepcolor=\color{myblue},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    stringstyle=\color{rgb: red,0.33;green,0.45;blue,0.87},
+    tabsize=2,
+    emphstyle=\color{variables},
+  }
+
+  \lstdefinestyle{Arduino}{%
+      language=arduino,
+      style=FormattedNumber,
+      keywords={setup, loop, if, else, for, switch, while, do, break, continue, return, goto},
+      morekeywords=[2]{HIGH, LOW, INPUT, OUTPUT, INPUT_PULLUP, LED_BUILTIN, true, false, %
+        int, float, void, boolean, char, word, long, short, double, string, array},
+      morekeywords=[3]{const, pinMode, digitalWrite, digitalRead, analogReference, %
+        analogRead, analogWrite, analogReadResolution, analogWriteResolution, tone, noTone, %
+        shiftOut, shiftIn, pulseIn, millis, micros, delay, delayMicroseconds, min, max, abs, %
+        constrain, map, pow, sqrt, sin, cos, tan, isAlphaNumeric, inAlpha, isAscii, isWhitespace, %
+        isControl, isDigit, isGraph, isLowerCase, isPintable, isPunct, isSpace, isUpperCase, %
+        isHexadecimalDigit, randomSeed, random, lowByte, highByte, bitRead, bitWrite, bitSet, %
+        bitClear, bit, attachInterrupt, detachInterrupt, interrupts, noInterrupts, Stream, %
+        Keyboard, Mouse, begin, println, print},
+      morekeywords=[4]{Serial},
+      morecomment=[l]{//},
+      morecomment=[s]{/*}{*/},
+      emph={const},
+  }
+
+  % Comando para incluir un sketch de Arduino, el primer parámetro es el nombre del archivo que contiene el script (sin .ino), el segundo es el etiqueta del contador Listing
+  \newcommand{\ArduinoSketch}[2]{
+    \begin{itemize}
+    \item[]\lstinputlisting[language=arduino,caption=#2,label=#1,style=Arduino,frame=single, %
+      framexleftmargin=15pt,rulecolor=\color{arduino},framerule=1pt]{#1.ino}
+    \end{itemize}
+  }
+
+  % Ambiente para incluir un sketch de Arduino escribiendo el código directamente en el documento LaTeX, tiene un parámetro de entrada que corresponde al título del sketch
+  \newtcblisting{ArduinoSketchBox}[2][colframe = arduino, enhanced, drop shadow, hbox]{
+  	arc = 3pt, outer arc = 3pt,
+  	listing only,
+  	listing options = {
+      language = arduino,
+  		style = Arduino,
+  	},
+  	title = #2,
+  	#1
+  }
+
+  \newcommand{\ArduinoInline}[1]{
+    \lstinline[language=arduino,style=Arduino]{#1}
+  }
+}
+
+%Processing
+\DeclareOption{processing}{
+  \lstdefinelanguage{processing}{
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{gray},
+    deletekeywords={...},
+    escapeinside={\%*}{*)},
+    extendedchars=true,
+    keepspaces=true,
+    keywordstyle=[1]\color{blueProcessing},
+    keywordstyle=[2]\bfseries\color{blueProcessing},
+    keywordstyle=[3]\color{orangeProcessing},
+    keywordstyle=[4]\color{greenProcessing},
+    keywordstyle=[5]\color{redProcessing},
+    keywordstyle=[6]\color{constantProcessing},
+    keywordstyle=[7]\color{green2Processing},
+    morekeywords={*,...},
+    numbers=left,
+    numbersep=5pt,
+    numberstyle=\tiny\color{mygray},
+    rulecolor=\color{black},
+    rulesepcolor=\color{myblue},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    stringstyle=\color{rgb: red,0.33;green,0.45;blue,0.87},
+    tabsize=2,
+    emphstyle=\color{blue},
+  }
+
+  \lstdefinestyle{Processing}{%
+      language=processing,
+      style=FormattedNumber,
+      keywords={size, exit, loop, noLoop, popStyle, background, pushStyle, fill, %
+        noFill, stroke, strokeWeight, noStroke, line, triangle, quad, rect, arc, ellipse, %
+        frameRate, random, cos, sin, second, minute, hour, println, loadImage, image, %
+        sqrt, sq, printArray, list, createFont, length, redraw, %
+        thread, cursor, delay, displayDensity, frameRate, fullScreen, noCursor, noSmooth, %
+        pixelDensity, smooth, str, hex, binary, unbinary, unhex, join, match, matchAll, %
+        nf, nfc, nfp, nfs, split, splitTokens, trim, append, arrayCopy, concat, expand, %
+        reverse, shorten, sort, splice, subset, createShape, loadShape, point, quad, rect, %
+        bezier, bezierDetail, bezierPoint, bezierTangent, curve, curveDetail, curvePoint, %
+        curveTangent, curveTightness, box, sphere, sphereDetail, ellipseMode, rectMode, %
+        strokeCap, strokeJoin, strokeWeight, beginContour, beginShape, bezierVertex, %
+        endContour, endShape, quadraticVertex, vertex, shape, shapeMode, createInput, %
+        createReader, launch, loadBytes, loadJSONArray, loadJSONObject, loadStrings, %
+        loadTable, loadXML, parseJSONArray, parseJSONObject, parseXML, selectFolder, %
+        selectInput, day, hour, millis, minute, month, second, year, print, printArray, %
+        println, save, saveFrame, beginRaw, beginRecord, createOutput, createWriter, %
+        endRaw, endRecord, saveBytes, saveJSONArray, saveJSONObject, saveStream, %
+        saveStrings, saveTable, saveXML, selectOutput, applyMatrix, popMatrix, printMatrix, %
+        pushMatrix, resetMatrix, rotate, rotateX, rotateY, rotateZ, scale, shearX, shearY, %
+        translate, ambientLight, directionalLight, lightFalloff, lights, lightSpecular, %
+        noLights, normal, pointLight, spotLight, beginCamera, camera, endCamera, frustum, %
+        ortho, perspective, printCamera, printProjection, modelX, modelY, modelZ, %
+        screenX, screenY, screenZ, ambient, emmisive, shininess, specular, clear, %
+        colorMode, alpha, blue, brightness, color, green, hue, lerpColor, red, saturationx %
+        createImage, imageMode, noTint, requestImage, tint, texture, textureMode, %
+        textureWrap, blend, copy, filter, get, loadPixels, set, updatePixels, blendMode, %
+        clip, createGraphics, noClip, loadShader, resetShader, shader, createFont, %
+        loadFont, text, textFont, textAlign, textLeading, textMode, textSize, textWidth, %
+        textAscent, textDescent, abs, ceil, constrain, dist, exp, floor, lerp, log, %
+        mag, max, min, norm, pow, round, sq, sqrt, acos, asin, atan, atan2, degrees, radians, %
+        tan, noise, noiseDetail, noiseSeed, randomGaussian, randomSeed},% define keywords
+      morekeywords=[2]{setup, draw, keyPressed, settings, mouseClicked, mouseDragged, %
+        mouseMoved, mousePressed, mouseReleased, mouseWheel, keyPressed, keyReleased, %
+        keyTyped},
+      morekeywords=[3]{color, int, float, PImage, String, boolean, PFont, byte, char, %
+        double, long, Array, ArrayList, FloatDict, FloatList, HashMap, IntDict, IntList, %
+        JSONArray, JSONObject, String, StringDict, StringList, Table, TableRow, XML, %
+        BufferedReader, PrintWriter, pixels, PGraphics, PShader, PFont, PVector},
+      morekeywords=[4]{while, if, for, else, RIGHT, LEFT, catch, try, switch},
+      morekeywords=[5]{height, width, mouseX, mouseY, keyCode, focused, frameCount, %
+        frameRate, mousePressed, pixelHeight, pixelWidth, PShape, mouseButton, mouseX, %
+        mouseY, pmouseX, pmouseY, key, keyCode},
+      morekeywords=[6]{PI, HALF_PI, QUARTER_PI, TAU, TWO_PI},
+      morekeywords=[7]{extends, class, final, implements, import, new, null, private, %
+        public, return, static, super, this, false, true, void, break, case, continue, %
+        default},
+      morecomment=[l]{//},
+      morecomment=[s]{/*}{*/},
+      emph={HIGH, OUTPUT, LOW},
+  }
+
+  \newcommand{\ProcessingSketch}[2]{
+    \begin{itemize}
+    \item[]\lstinputlisting[language=Processing,caption=#2,label=#1,style=Processing, %
+      frame=single,framexleftmargin=15pt,rulecolor=\color{processing},framerule=1pt]{#1.pde}
+    \end{itemize}
+  }
+
+  \newtcblisting{ProcessingSketchBox}[2][colframe = processing, enhanced, drop shadow, hbox]{
+  	arc = 3pt, outer arc = 3pt,
+  	listing only,
+  	listing options = {
+      language = processing,
+  		style = Processing,
+  	},
+  	title = #2,
+  	#1
+  }
+
+  \newcommand{\ProcessingInline}[1]{
+    \lstinline[language=processing,style=Processing]{#1}
+  }
+}
+\ProcessOptions\relax
+
+\endinput
